@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TrapApiError, WidgetHeader, WidgetLoader, Widget, WidgetBody, WidgetAvatar } from '@mozaik/ui';
 
-const request = require('request-promise-native')
-
 export default class Events extends Component {
+
     static PropTypes = {
         title: PropTypes.string,
         apiData: PropTypes.shape({
@@ -13,8 +12,7 @@ export default class Events extends Component {
         apiError: PropTypes.object,
     }
 
-    static getApiRequest({ events }) {
-        console.log('events', events);
+    static getApiRequest() {
         return {
             id: `googleCalendar.events`
         }
@@ -23,15 +21,31 @@ export default class Events extends Component {
     render() {
         const { apiData, apiError, title } = this.props;
 
-        let body;
+        let body = <WidgetLoader />;
         if (apiData) {
             body = (
                 <div id="googleCalendar">
-                    <div id="events">
-                    </div>
+                    {apiData.map(event =>
+                         <div className="event">
+                            <div className="top">
+                                <div className="left">{event.creator.email}</div>
+                                <div className="right">
+                                    <span className="start">{event.start.date}</span>
+                                    <span className="end"> - {event.end.date}</span>
+                                </div>
+                            </div>
+                            <div className="middle">
+                                <a href={event.htmlLink} target="_blank">
+                                    {event.summary}
+                                </a>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )
         }
+
+        console.log('apidata', apiData);
 
         return (
             <Widget>

@@ -1,5 +1,5 @@
-import DailySong from './DailySong'
+import Events from './Events'
 
 export default {
-	DailySong
+	Events
 }
