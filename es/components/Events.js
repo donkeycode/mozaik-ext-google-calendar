@@ -23,7 +23,21 @@ var Events = function (_Component) {
         };
     };
 
+    Events.prototype.getReadableDate = function getReadableDate(date) {
+        date = new Date(date);
+
+        return date.getHours() + 'h' + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
+    };
+
+    Events.prototype.getCurrentDate = function getCurrentDate() {
+        var date = new Date();
+
+        return date.getDate() + '/' + date.getMonth() + 1 + '/' + date.getFullYear();
+    };
+
     Events.prototype.render = function render() {
+        var _this2 = this;
+
         var _props = this.props,
             apiData = _props.apiData,
             apiError = _props.apiError,
@@ -53,13 +67,13 @@ var Events = function (_Component) {
                                 React.createElement(
                                     'span',
                                     { className: 'start' },
-                                    event.start.date
+                                    event.start.date || _this2.getReadableDate(event.start.dateTime)
                                 ),
                                 React.createElement(
                                     'span',
                                     { className: 'end' },
                                     ' - ',
-                                    event.end.date
+                                    event.end.date || _this2.getReadableDate(event.end.dateTime)
                                 )
                             )
                         ),
@@ -83,7 +97,7 @@ var Events = function (_Component) {
             Widget,
             null,
             React.createElement(WidgetHeader, {
-                title: title || 'Calendrier'
+                title: title || 'Calendrier - ' + this.getCurrentDate()
             }),
             React.createElement(
                 WidgetBody,

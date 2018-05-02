@@ -18,6 +18,19 @@ export default class Events extends Component {
         }
     }
 
+	getReadableDate(date) {
+		date = new Date(date);
+
+		return date.getHours() + 'h' + ((date.getMinutes() < 10) ? '0' : '') + date.getMinutes();
+	}
+
+	getCurrentDate() {
+		var date = new Date();
+
+		return date.getDate() + '/' + date.getMonth()+1 + '/' + date.getFullYear();
+	}
+
+
     render() {
         const { apiData, apiError, title } = this.props;
 
@@ -30,8 +43,8 @@ export default class Events extends Component {
                             <div className="top">
                                 <div className="left">{event.creator.email}</div>
                                 <div className="right">
-                                    <span className="start">{event.start.date}</span>
-                                    <span className="end"> - {event.end.date}</span>
+                                    <span className="start">{event.start.date || this.getReadableDate(event.start.dateTime)}</span>
+                                    <span className="end"> - {event.end.date || this.getReadableDate(event.end.dateTime)}</span>
                                 </div>
                             </div>
                             <div className="middle">
@@ -50,7 +63,7 @@ export default class Events extends Component {
         return (
             <Widget>
                 <WidgetHeader
-                    title={(title || 'Calendrier')}
+                    title={(title || 'Calendrier - ' + this.getCurrentDate())}
                 />
                 <WidgetBody>
                     <TrapApiError error={apiError}>
