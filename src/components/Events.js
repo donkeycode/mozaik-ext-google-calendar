@@ -27,7 +27,7 @@ export default class Events extends Component {
 	getCurrentDate() {
 		var date = new Date();
 
-		return date.getDate() + '/' + date.getMonth()+1 + '/' + date.getFullYear();
+		return date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear();
 	}
 
 
@@ -36,26 +36,34 @@ export default class Events extends Component {
 
         let body = <WidgetLoader />;
         if (apiData) {
-            body = (
-                <div id="googleCalendar">
-                    {apiData.map(event =>
-                         <div className="event">
-                            <div className="top">
-                                <div className="left">{event.creator.email}</div>
-                                <div className="right">
-                                    <span className="start">{event.start.date || this.getReadableDate(event.start.dateTime)}</span>
-                                    <span className="end"> - {event.end.date || this.getReadableDate(event.end.dateTime)}</span>
+            if (apiData.length) {
+                body = (
+                    <div id="googleCalendar">
+                        {apiData.map(event =>
+                             <div className="event">
+                                <div className="top">
+                                    <div className="left">{event.creator.email}</div>
+                                    <div className="right">
+                                        <span className="start">{event.start.date || this.getReadableDate(event.start.dateTime)}</span>
+                                        <span className="end"> - {event.end.date || this.getReadableDate(event.end.dateTime)}</span>
+                                    </div>
+                                </div>
+                                <div className="middle">
+                                    <a href={event.htmlLink} target="_blank">
+                                        {event.summary}
+                                    </a>
                                 </div>
                             </div>
-                            <div className="middle">
-                                <a href={event.htmlLink} target="_blank">
-                                    {event.summary}
-                                </a>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            )
+                        )}
+                    </div>
+                )
+            } else {
+                body = (
+                    <div id="calendar-empty">
+                        <p>Nothing to come today</p>
+                    </div>
+                )
+            }
         }
 
         console.log('apidata', apiData);

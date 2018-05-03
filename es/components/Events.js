@@ -32,7 +32,7 @@ var Events = function (_Component) {
     Events.prototype.getCurrentDate = function getCurrentDate() {
         var date = new Date();
 
-        return date.getDate() + '/' + date.getMonth() + 1 + '/' + date.getFullYear();
+        return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
     };
 
     Events.prototype.render = function render() {
@@ -46,49 +46,61 @@ var Events = function (_Component) {
 
         var body = React.createElement(WidgetLoader, null);
         if (apiData) {
-            body = React.createElement(
-                'div',
-                { id: 'googleCalendar' },
-                apiData.map(function (event) {
-                    return React.createElement(
-                        'div',
-                        { className: 'event' },
-                        React.createElement(
+            if (apiData.length) {
+                body = React.createElement(
+                    'div',
+                    { id: 'googleCalendar' },
+                    apiData.map(function (event) {
+                        return React.createElement(
                             'div',
-                            { className: 'top' },
+                            { className: 'event' },
                             React.createElement(
                                 'div',
-                                { className: 'left' },
-                                event.creator.email
+                                { className: 'top' },
+                                React.createElement(
+                                    'div',
+                                    { className: 'left' },
+                                    event.creator.email
+                                ),
+                                React.createElement(
+                                    'div',
+                                    { className: 'right' },
+                                    React.createElement(
+                                        'span',
+                                        { className: 'start' },
+                                        event.start.date || _this2.getReadableDate(event.start.dateTime)
+                                    ),
+                                    React.createElement(
+                                        'span',
+                                        { className: 'end' },
+                                        ' - ',
+                                        event.end.date || _this2.getReadableDate(event.end.dateTime)
+                                    )
+                                )
                             ),
                             React.createElement(
                                 'div',
-                                { className: 'right' },
+                                { className: 'middle' },
                                 React.createElement(
-                                    'span',
-                                    { className: 'start' },
-                                    event.start.date || _this2.getReadableDate(event.start.dateTime)
-                                ),
-                                React.createElement(
-                                    'span',
-                                    { className: 'end' },
-                                    ' - ',
-                                    event.end.date || _this2.getReadableDate(event.end.dateTime)
+                                    'a',
+                                    { href: event.htmlLink, target: '_blank' },
+                                    event.summary
                                 )
                             )
-                        ),
-                        React.createElement(
-                            'div',
-                            { className: 'middle' },
-                            React.createElement(
-                                'a',
-                                { href: event.htmlLink, target: '_blank' },
-                                event.summary
-                            )
-                        )
-                    );
-                })
-            );
+                        );
+                    })
+                );
+            } else {
+                body = React.createElement(
+                    'div',
+                    { id: 'calendar-empty' },
+                    React.createElement(
+                        'p',
+                        null,
+                        'Nothing to come today'
+                    )
+                );
+            }
         }
 
         console.log('apidata', apiData);
