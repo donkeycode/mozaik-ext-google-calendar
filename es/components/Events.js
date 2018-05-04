@@ -41,10 +41,12 @@ var Events = function (_Component) {
         var _props = this.props,
             apiData = _props.apiData,
             apiError = _props.apiError,
-            title = _props.title;
+            title = _props.title,
+            view = _props.view;
 
 
         var body = React.createElement(WidgetLoader, null);
+        var viewId = view === 'tv' ? 'tv' : 'screen';
         if (apiData) {
             if (apiData.length) {
                 body = React.createElement(
@@ -56,35 +58,39 @@ var Events = function (_Component) {
                             { className: 'event' },
                             React.createElement(
                                 'div',
-                                { className: 'top' },
+                                { className: viewId },
                                 React.createElement(
                                     'div',
-                                    { className: 'left' },
-                                    event.creator.email
+                                    { className: 'top' },
+                                    React.createElement(
+                                        'div',
+                                        { className: 'left' },
+                                        event.creator.email
+                                    ),
+                                    React.createElement(
+                                        'div',
+                                        { className: 'right' },
+                                        React.createElement(
+                                            'span',
+                                            { className: 'start' },
+                                            event.start.date || _this2.getReadableDate(event.start.dateTime)
+                                        ),
+                                        React.createElement(
+                                            'span',
+                                            { className: 'end' },
+                                            ' - ',
+                                            event.end.date || _this2.getReadableDate(event.end.dateTime)
+                                        )
+                                    )
                                 ),
                                 React.createElement(
                                     'div',
-                                    { className: 'right' },
+                                    { className: 'middle' },
                                     React.createElement(
-                                        'span',
-                                        { className: 'start' },
-                                        event.start.date || _this2.getReadableDate(event.start.dateTime)
-                                    ),
-                                    React.createElement(
-                                        'span',
-                                        { className: 'end' },
-                                        ' - ',
-                                        event.end.date || _this2.getReadableDate(event.end.dateTime)
+                                        'a',
+                                        { href: event.htmlLink, target: '_blank' },
+                                        event.summary
                                     )
-                                )
-                            ),
-                            React.createElement(
-                                'div',
-                                { className: 'middle' },
-                                React.createElement(
-                                    'a',
-                                    { href: event.htmlLink, target: '_blank' },
-                                    event.summary
                                 )
                             )
                         );
@@ -128,6 +134,7 @@ var Events = function (_Component) {
 
 Events.PropTypes = {
     title: PropTypes.string,
+    view: PropTypes.string,
     apiData: PropTypes.shape({
         Events: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired
     }),
