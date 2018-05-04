@@ -41,6 +41,11 @@ const client = mozaik => {
             const calendar = google.calendar({version: 'v3', auth});
 
             calendar.calendarList.list({}, (err, {data}) => {
+                if (err) {
+                    console.warn('client.js ->', err);
+
+                    return;
+                }
                 const calendarsList = data.items;
                 const endDate = new Date();
                 endDate.setHours(23, 59., 59, 999);
