@@ -43,6 +43,11 @@ var client = function client(mozaik) {
             calendar.calendarList.list({}, function (err, _ref) {
                 var data = _ref.data;
 
+                if (err) {
+                    console.warn('client.js ->', err);
+
+                    return;
+                }
                 var calendarsList = data.items;
                 var endDate = new Date();
                 endDate.setHours(23, 59., 59, 999);
